@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hushållspanelen</title>
+  <!--
+    Start page for the home-screen icon. Apps Script pages run inside a Google
+    frame, so iOS and Android can't read icons from the app itself. Add THIS
+    page to the home screen; it shows the icon and forwards to the app, where
+    Google sign-in decides who gets in. Contains no data.
+  -->
+  <meta name="theme-color" content="#9E2B25">
+  <meta name="apple-mobile-web-app-title" content="Hushållet">
+  <meta name="application-name" content="Hushållet">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root { --brand: #9E2B25; --deep: #6E1D1A; --bg: #FAF6F0; --ink: #2E2723; --muted: #7A6E66; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      background: var(--bg); color: var(--ink); font: 16px/1.5 -apple-system, 'Segoe UI', Roboto, sans-serif;
+      display: grid; place-items: center; text-align: center; padding: 16px; box-sizing: border-box;
+    }
+    img { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 4px 16px rgba(46, 39, 35, .15); }
+    h1 { font: 600 24px Georgia, 'Times New Roman', serif; margin: 16px 0 4px; }
+    p { color: var(--muted); margin: 0 0 20px; }
+    a.btn {
+      display: inline-block; background: var(--brand); color: #fff; text-decoration: none; font-weight: 600;
+      padding: 14px 22px; border-radius: 10px; min-height: 20px;
+    }
+    .hint { font-size: 14px; max-width: 340px; margin: 24px auto 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="icons/apple-touch-icon.png" alt="">
+    <h1>Hushållspanelen</h1>
+    <p id="status">Öppnar…</p>
+    <a class="btn" id="open" href="#">Öppna Hushållspanelen</a>
+    <p class="hint" id="hint" hidden>Lägg till den här sidan på hemskärmen: <strong>Dela → Lägg till på hemskärmen</strong> (iPhone) eller <strong>⋮ → Lägg till på startskärmen</strong> (Android). Ikonen öppnar sedan appen direkt.</p>
+  </main>
+  <script>
+    // The deployed Apps Script web app (…/exec). Access is still limited to the
+    // allow-listed Google accounts, so this URL is not a secret.
+    var APP_URL = 'https://script.google.com/macros/s/AKfycbxdBC-XaFFle1xTPqbLv7_BVcQXGM4aACxJz5T7LND7AstDeQLmJPInnkhJ4-mtP0A/exec';
+
+    var link = document.getElementById('open');
+    link.href = APP_URL;
+    // ?stay keeps this page open so it can be added to the home screen.
+    if (/[?&]stay\b/.test(location.search)) {
+      document.getElementById('status').textContent = 'Startsida för hemskärmen';
+      document.getElementById('hint').hidden = false;
+      // Save the shortcut without ?stay, so tapping the icon forwards to the app.
+      try { history.replaceState(null, '', location.pathname); } catch (e) { /* old browsers: harmless */ }
+    } else if (APP_URL.indexOf('https://script.google.com/') === 0) {
+      location.replace(APP_URL);
+    }
+  </script>
+</body>
+</html>
